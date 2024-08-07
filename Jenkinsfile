@@ -1,9 +1,16 @@
 pipeline {
-    agent any 
+    agent any
+
     stages {
-        stage ('package') {
+        stage('Package') {
             steps {
-            sh 'mvn clean package'
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Print JUnit Results') {
+            steps {
+                junit allowEmptyResults: false, testResults: '**/target/surefire-reports/*.xml'
             }
         }
     }
