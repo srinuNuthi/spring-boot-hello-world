@@ -2,24 +2,20 @@ pipeline {
     agent any
 
     stages {
-        stage('Package') {
+        stage('SonarQube Analysis') {
             steps {
-                sh 'mvn clean package'
+                withSonarQubeEnv('My SonarQube Server') {
+                    sh 'mvn clean verify sonar:sonar -Dsonar.projectKey=petclinic -Dsonar.projectName=petclinic'
+                }
             }
         }
 
-        stage('Print JUnit Results') {
+        stage('Quality Gate') {
             steps {
-                junit allowEmptyResults: false, testResults: '**/target/surefire-reports/*.xml'
-            }
-        }
-
-        stage('Archive Artifacts') {
-            steps {
-                archiveArtifacts artifacts: '**/target/*.jar',
-                               allowEmptyArchive: true,
-                               fingerprint: true,
-                               onlyIfSuccessful: true
+                timeout(time: 1, unit: 'HOURS') {
+                    // Wait for the SonarQube quality gate result
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
     }
