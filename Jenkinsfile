@@ -38,19 +38,15 @@ pipeline {
                 }
             }
         }
-
-        stage('Upload Artifact to S3') {
+        stage(' upload artifact to s3') {
             steps {
-                s3Upload bucket: 'cf-templates-uh6slohihg2z-us-east-1',
-                         file: '**/target/*.jar',
-                         path: '',
-                         profileName: 'my_s3_profile',
-                         storageClass: 'STANDARD',
-                         selectedRegion: 'us-east-1',
-                         noUploadOnFailure: true,
-                         dontWaitForConcurrentBuildCompletion: true,
-                         consoleLogLevel: 'WARNING'
+                ss3Upload consoleLogLevel: 'INFO',
+                 dontSetBuildResultOnFailure: false,
+                  dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'cf-templates-uh6slohihg2z-us-east-1', excludedFile: '', flatten: true, gzipFiles: false, keepForever: false, managedArtifacts: false, noUploadOnFailure: true, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: '**/target/*.jar', storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: true]], 
+                  pluginFailureResultConstraint: 'FAILURE',
+                   profileName: 'my_s3_profile', userMetadata: []
             }
         }
     }
 }
+
