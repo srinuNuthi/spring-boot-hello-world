@@ -25,7 +25,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonar_qube') {
+                withSonarQubeEnv('My SonarQube Server') {
                     sh 'mvn clean verify sonar:sonar -Dsonar.projectKey=petclinic -Dsonar.projectName=petclinic'
                 }
             }
@@ -36,6 +36,20 @@ pipeline {
                 timeout(time: 1, unit: 'HOURS') {
                     waitForQualityGate abortPipeline: true
                 }
+            }
+        }
+
+        stage('Upload Artifact to S3') {
+            steps {
+                s3Upload bucket: 'cf-templates-uh6slohihg2z-us-east-1',
+                         file: '**/target/*.jar',
+                         path: '',
+                         profileName: 'my_s3_profile',
+                         storageClass: 'STANDARD',
+                         selectedRegion: 'us-east-1',
+                         noUploadOnFailure: true,
+                         dontWaitForConcurrentBuildCompletion: true,
+                         consoleLogLevel: 'WARNING'
             }
         }
     }
