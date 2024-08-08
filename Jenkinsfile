@@ -40,7 +40,7 @@ pipeline {
         }
         stage(' upload artifact to s3') {
             steps {
-                ss3Upload consoleLogLevel: 'INFO',
+                s3Upload consoleLogLevel: 'INFO',
                  dontSetBuildResultOnFailure: false,
                   dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'cf-templates-uh6slohihg2z-us-east-1', excludedFile: '', flatten: true, gzipFiles: false, keepForever: false, managedArtifacts: false, noUploadOnFailure: true, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: '**/target/*.jar', storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: true]], 
                   pluginFailureResultConstraint: 'FAILURE',
