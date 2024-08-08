@@ -48,5 +48,15 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            emailext(
+               body: 'The build status is ${BUILD_STATUS} and the build number is ${BUILD_NUMBER}.',
+                subject: 'Mail from Jenkins',
+                to: 'nuthisrinivasulu75@gmail.com'
+            )
+
+        }
+    }
 }
 
